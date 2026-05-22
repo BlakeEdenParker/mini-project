@@ -2,6 +2,8 @@
 set -euo pipefail
 
 CONFIG_PATH="${1:-deploy/apps/board.env}"
+INPUT_REPO_URL="${REPO_URL:-}"
+INPUT_REPO_BRANCH="${REPO_BRANCH:-}"
 
 if [[ "${EUID}" -ne 0 ]]; then
   echo "Run as root: sudo bash scripts/init-web-server.sh" >&2
@@ -16,7 +18,8 @@ fi
 # shellcheck disable=SC1090
 source "${CONFIG_PATH}"
 
-REPO_URL="${REPO_URL:-${2:-}}"
+REPO_URL="${INPUT_REPO_URL:-${REPO_URL:-${2:-}}}"
+REPO_BRANCH="${INPUT_REPO_BRANCH:-${REPO_BRANCH}}"
 
 if [[ -z "${REPO_URL}" && ! -d "${APP_ROOT}/.git" ]]; then
   echo "Set REPO_URL in ${CONFIG_PATH}, or run: sudo REPO_URL=https://... bash scripts/init-web-server.sh" >&2

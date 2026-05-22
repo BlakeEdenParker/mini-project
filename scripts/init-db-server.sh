@@ -2,6 +2,8 @@
 set -euo pipefail
 
 CONFIG_PATH="${1:-deploy/db/board.env}"
+INPUT_REPO_URL="${REPO_URL:-}"
+INPUT_REPO_BRANCH="${REPO_BRANCH:-}"
 
 if [[ "${EUID}" -ne 0 ]]; then
   echo "Run as root: sudo bash scripts/init-db-server.sh" >&2
@@ -16,7 +18,8 @@ fi
 # shellcheck disable=SC1090
 source "${CONFIG_PATH}"
 
-REPO_URL="${REPO_URL:-${2:-}}"
+REPO_URL="${INPUT_REPO_URL:-${REPO_URL:-${2:-}}}"
+REPO_BRANCH="${INPUT_REPO_BRANCH:-${REPO_BRANCH}}"
 
 if [[ -z "${REPO_URL}" && ! -d "${REPO_ROOT}/.git" ]]; then
   echo "Set REPO_URL in ${CONFIG_PATH}, or run: sudo REPO_URL=https://... bash scripts/init-db-server.sh" >&2
@@ -50,4 +53,3 @@ systemctl restart mariadb
 mysql < "${REPO_ROOT}/${INIT_SQL_SOURCE}"
 
 echo "MariaDB initialized on ${DB_SERVER_IP}; app access allowed from ${WEB_SERVER_IP}"
-

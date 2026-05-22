@@ -136,6 +136,8 @@ The DB script:
 
 For additional web apps later, copy `deploy/apps/board.env`, change `APP_NAME`, `APP_ROOT`, `GUNICORN_BIND`, `SYSTEMD_SOURCE`, `NGINX_SOURCE`, and `NGINX_LOCATION_SOURCE`, then add matching systemd/nginx files. nginx keeps one port-80 server block and loads app routes from `/etc/nginx/app-locations/*.conf`, which avoids fighting over the default site.
 
+The default branch in the sample env files is `master`, matching this repository. Change `REPO_BRANCH` if the GitHub repo uses another branch.
+
 Python uses the Ubuntu system `python3.12`, but packages are installed into `/var/www/.venv`.
 
 ```bash
