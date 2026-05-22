@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}로그인 - Mini Board{% endblock %}
+
+{% block content %}
+  <section class="auth-panel">
+    <h1>로그인</h1>
+    <form class="form-stack" method="post" action="{{ url_for('auth.login') }}">
+      <input type="hidden" name="next_url" value="{{ next_url }}">
+      <label>
+        아이디
+        <input type="text" name="username" autocomplete="username" required>
+      </label>
+      <label>
+        비밀번호
+        <input type="password" name="password" autocomplete="current-password" required>
+      </label>
+      <button type="submit" class="primary-button">로그인</button>
+    </form>
+  </section>
+{% endblock %}
+

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% set is_edit = mode == "edit" %}
+{% block title %}{{ "글 수정" if is_edit else "글쓰기" }} - Mini Board{% endblock %}
+
+{% block content %}
+  <section class="editor">
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">{{ "Edit" if is_edit else "Create" }}</p>
+        <h1>{{ "글 수정" if is_edit else "글쓰기" }}</h1>
+      </div>
+      <a class="secondary-button" href="{{ url_for('posts.detail_post', post_id=post.id) if is_edit else url_for('posts.list_posts') }}">취소</a>
+    </div>
+
+    <form class="form-stack" method="post" action="{{ url_for('posts.update_post', post_id=post.id) if is_edit else url_for('posts.create_post') }}">
+      <label>
+        제목
+        <input type="text" name="title" maxlength="120" value="{{ post.title if is_edit else '' }}" required>
+      </label>
+      <label>
+        내용
+        <textarea name="content" rows="14" required>{{ post.content if is_edit else '' }}</textarea>
+      </label>
+      <div class="action-bar">
+        <button type="submit" class="primary-button">{{ "수정 완료" if is_edit else "등록" }}</button>
+      </div>
+    </form>
+  </section>
+{% endblock %}
+

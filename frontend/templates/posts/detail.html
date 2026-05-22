@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - Mini Board{% endblock %}
+
+{% block content %}
+  <article class="post-detail">
+    <header class="post-detail-header">
+      <div>
+        <p class="eyebrow">Post #{{ post.id }}</p>
+        <h1>{{ post.title }}</h1>
+        <dl class="meta-list">
+          <div><dt>작성자</dt><dd>{{ post.author_name }}</dd></div>
+          <div><dt>작성일</dt><dd>{{ post.created_at }}</dd></div>
+          <div><dt>조회</dt><dd>{{ post.views }}</dd></div>
+        </dl>
+      </div>
+      <a class="secondary-button" href="{{ url_for('posts.list_posts') }}">목록</a>
+    </header>
+
+    <div class="post-content">
+      {{ post.content }}
+    </div>
+
+    {% if user and (user.id == post.author_id or user.is_admin) %}
+      <footer class="action-bar">
+        <a class="secondary-button" href="{{ url_for('posts.edit_post_form', post_id=post.id) }}">수정</a>
+        <form method="post" action="{{ url_for('posts.delete_post', post_id=post.id) }}" data-confirm="정말 삭제할까요?">
+          <button type="submit" class="danger-button">삭제</button>
+        </form>
+      </footer>
+    {% endif %}
+  </article>
+{% endblock %}

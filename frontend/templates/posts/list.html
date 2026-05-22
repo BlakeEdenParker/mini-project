@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}글 목록 - Mini Board{% endblock %}
+
+{% block content %}
+  <section class="page-heading">
+    <div>
+      <p class="eyebrow">Board</p>
+      <h1>글 목록</h1>
+    </div>
+    {% if user %}
+      <a class="primary-button" href="{{ url_for('posts.new_post_form') }}">글쓰기</a>
+    {% else %}
+      <a class="secondary-button" href="{{ url_for('auth.login_form', next=url_for('posts.new_post_form')) }}">로그인 후 글쓰기</a>
+    {% endif %}
+  </section>
+
+  <section class="toolbar">
+    <form class="search-form" method="get" action="{{ url_for('posts.list_posts') }}">
+      <input type="search" name="q" placeholder="제목 또는 작성자 검색">
+      <button type="submit">검색</button>
+    </form>
+  </section>
+
+  <section class="post-table" aria-label="게시글 목록">
+    <div class="post-row post-row-head">
+      <span>번호</span>
+      <span>제목</span>
+      <span>작성자</span>
+      <span>작성일</span>
+      <span>조회</span>
+    </div>
+    {% for post in posts %}
+      <a class="post-row" href="{{ url_for('posts.detail_post', post_id=post.id) }}">
+        <span>{{ post.id }}</span>
+        <strong>{{ post.title }}</strong>
+        <span>{{ post.author_name }}</span>
+        <span>{{ post.created_at }}</span>
+        <span>{{ post.views }}</span>
+      </a>
+    {% endfor %}
+  </section>
+
+  <nav class="pagination" aria-label="페이지">
+    <a href="#">이전</a>
+    <strong>1</strong>
+    <a href="#">다음</a>
+  </nav>
+{% endblock %}
+
