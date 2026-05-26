@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -Eeuo pipefail
 
 APP_USER="web"
 APP_GROUP="web"
 VENV_DIR="/var/www/.venv"
-APP_DIR="/var/www/html/backend"
+APP_DIR="/var/www/html/service"
+
+if [[ "${EUID}" -ne 0 ]]; then
+  echo "Run as root: sudo ./scripts/setup-ubuntu-venv.sh" >&2
+  exit 1
+fi
 
 if ! getent group "${APP_GROUP}" >/dev/null 2>&1; then
   groupadd --system "${APP_GROUP}"

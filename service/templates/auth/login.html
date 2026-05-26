@@ -5,7 +5,7 @@
 {% block content %}
   <section class="auth-panel">
     <h1>로그인</h1>
-    <form class="form-stack" method="post" action="{{ url_for('auth.login') }}">
+    <form class="form-stack" method="post" action="{{ url_for('login') }}">
       <input type="hidden" name="next_url" value="{{ next_url }}">
       <label>
         아이디
@@ -19,4 +19,3 @@
     </form>
   </section>
 {% endblock %}
-

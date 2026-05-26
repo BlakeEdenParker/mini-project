@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-Set-Location "$PSScriptRoot\..\backend"
+Set-Location "$PSScriptRoot\..\service"
 
 if (-not (Test-Path ".venv")) {
     python -m venv .venv
@@ -8,5 +8,4 @@ if (-not (Test-Path ".venv")) {
 
 . ".\.venv\Scripts\Activate.ps1"
 pip install -r requirements.txt
-python wsgi.py
-
+python app.py

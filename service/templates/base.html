@@ -8,19 +8,19 @@
   </head>
   <body>
     <header class="site-header">
-      <a class="brand" href="{{ url_for('posts.list_posts') }}">Mini Board</a>
+      <a class="brand" href="{{ url_for('list_posts') }}">Mini Board</a>
       {% if user and user.is_admin %}
         <span class="admin-badge">관리자 권한 사용중.</span>
       {% endif %}
       <nav class="nav">
-        <a href="{{ url_for('posts.list_posts') }}">글 목록</a>
+        <a href="{{ url_for('list_posts') }}">글 목록</a>
         {% if user %}
-          <a href="{{ url_for('posts.new_post_form') }}">글쓰기</a>
-          <form method="post" action="{{ url_for('auth.logout') }}">
+          <a href="{{ url_for('new_post_form') }}">글쓰기</a>
+          <form method="post" action="{{ url_for('logout') }}">
             <button type="submit" class="link-button">로그아웃</button>
           </form>
         {% else %}
-          <a href="{{ url_for('auth.login_form') }}">로그인</a>
+          <a href="{{ url_for('login_form') }}">로그인</a>
         {% endif %}
       </nav>
     </header>

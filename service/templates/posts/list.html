@@ -9,14 +9,14 @@
       <h1>글 목록</h1>
     </div>
     {% if user %}
-      <a class="primary-button" href="{{ url_for('posts.new_post_form') }}">글쓰기</a>
+      <a class="primary-button" href="{{ url_for('new_post_form') }}">글쓰기</a>
     {% else %}
-      <a class="secondary-button" href="{{ url_for('auth.login_form', next=url_for('posts.new_post_form')) }}">로그인 후 글쓰기</a>
+      <a class="secondary-button" href="{{ url_for('login_form', next=url_for('new_post_form')) }}">로그인 후 글쓰기</a>
     {% endif %}
   </section>
 
   <section class="toolbar">
-    <form class="search-form" method="get" action="{{ url_for('posts.list_posts') }}">
+    <form class="search-form" method="get" action="{{ url_for('list_posts') }}">
       <input type="search" name="q" placeholder="제목 또는 작성자 검색">
       <button type="submit">검색</button>
     </form>
@@ -31,7 +31,7 @@
       <span>조회</span>
     </div>
     {% for post in posts %}
-      <a class="post-row" href="{{ url_for('posts.detail_post', post_id=post.id) }}">
+      <a class="post-row" href="{{ url_for('detail_post', post_id=post.id) }}">
         <span>{{ post.id }}</span>
         <strong>{{ post.title }}</strong>
         <span>{{ post.author_name }}</span>
@@ -47,4 +47,3 @@
     <a href="#">다음</a>
   </nav>
 {% endblock %}
-

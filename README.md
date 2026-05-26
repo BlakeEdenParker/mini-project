@@ -6,15 +6,10 @@ Flask, Gunicorn, nginx, MariaDB 조합으로 운영할 게시판 프로젝트 �
 
 ```text
 mini-project/
-  backend/
-    app/
-      __init__.py
-      routes/
-        auth.py
-        posts.py
-    wsgi.py
+  service/
+    app.py
     requirements.txt
-  frontend/
+    .env.example
     templates/
       base.html
       auth/
@@ -63,7 +58,7 @@ mini-project/
 - Admin users see `관리자 권한 사용중.` in the page header
 - DB server: `10.0.2.11/24`
 - Web server: `10.0.2.10/24`
-- Future backend targets: session login, CSRF protection, MariaDB repository layer, pagination
+- Future service targets: session login, CSRF protection, MariaDB repository layer, pagination
 
 ## Ubuntu Layout
 
@@ -71,8 +66,7 @@ Deploy this project under `/var/www/html`.
 
 ```text
 /var/www/html/
-  backend/
-  frontend/
+  service/
   nginx/
   database/
 ```
@@ -86,14 +80,21 @@ Use separate scripts per server role:
 
 The reusable web init script is `scripts/init-web-server.sh`. App-specific values live in `deploy/apps/*.env`, so future services can add their own env file, port, nginx config, and systemd unit without rewriting the common setup.
 
-For the current board app:
+For the current board app on Ubuntu 24.04:
 
 ```bash
 sudo apt-get update
 sudo apt-get install -y git
 git clone https://github.com/your-org/your-repo.git /tmp/mini-project
 cd /tmp/mini-project
-sudo REPO_URL=https://github.com/your-org/your-repo.git bash scripts/init-web-server.sh
+sudo env REPO_URL=https://github.com/your-org/your-repo.git ./scripts/init-web-server.sh
+```
+
+If the project folder is already copied locally, `REPO_URL` is optional:
+
+```bash
+cd /tmp/mini-project
+sudo ./scripts/init-web-server.sh
 ```
 
 If the repo is already cloned at `/var/www/html`, edit `/var/www/html/deploy/apps/board.env` and set `REPO_URL`, then run:
@@ -121,7 +122,14 @@ sudo apt-get update
 sudo apt-get install -y git
 git clone https://github.com/your-org/your-repo.git /tmp/mini-project
 cd /tmp/mini-project
-sudo REPO_URL=https://github.com/your-org/your-repo.git bash scripts/init-db-server.sh
+sudo env REPO_URL=https://github.com/your-org/your-repo.git ./scripts/init-db-server.sh
+```
+
+If the project folder is already copied locally, `REPO_URL` is optional:
+
+```bash
+cd /tmp/mini-project
+sudo ./scripts/init-db-server.sh
 ```
 
 The DB script:
@@ -158,7 +166,7 @@ sudo useradd --system --create-home --shell /bin/bash web
 sudo install -d -o web -g web -m 0750 /var/www/.venv
 sudo runuser -u web -- python3.12 -m venv /var/www/.venv
 sudo runuser -u web -- /var/www/.venv/bin/python -m pip install --upgrade pip wheel
-sudo runuser -u web -- /var/www/.venv/bin/pip install -r /var/www/html/backend/requirements.txt
+sudo runuser -u web -- /var/www/.venv/bin/pip install -r /var/www/html/service/requirements.txt
 sudo chown -R web:web /var/www/.venv
 sudo chmod -R u+rwX,go-rwx /var/www/.venv
 ```
@@ -166,8 +174,8 @@ sudo chmod -R u+rwX,go-rwx /var/www/.venv
 Gunicorn should listen on the web Ubuntu host only:
 
 ```bash
-cd /var/www/html/backend
-/var/www/.venv/bin/gunicorn -w 3 -b 127.0.0.1:8000 wsgi:app
+cd /var/www/html/service
+/var/www/.venv/bin/gunicorn -w 3 -b 127.0.0.1:8000 app:app
 ```
 
 systemd example:
@@ -179,7 +187,7 @@ sudo systemctl enable --now board
 sudo systemctl status board
 ```
 
-nginx receives port 80 traffic and reverse-proxies page routes to Gunicorn. Static files are served from `/var/www/html/frontend/static`.
+nginx receives port 80 traffic and reverse-proxies page routes to Gunicorn. Static files are served from `/var/www/html/service/static`.
 
 Run `database/init.sql` on the DB Ubuntu host. It creates `board_db`, seeds the sample posts, and grants app DB access only to `board_app` from `10.0.2.10`.
 
@@ -193,11 +201,11 @@ Change this password before real use.
 ## Local Flask Run
 
 ```powershell
-cd backend
+cd service
 python -m venv .venv
 .\\.venv\\Scripts\\Activate.ps1
 pip install -r requirements.txt
-python wsgi.py
+python app.py
 ```
 
 Open `http://127.0.0.1:5000`.
