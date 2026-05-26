@@ -219,13 +219,18 @@ textarea {
 }
 
 .pagination a,
-.pagination strong {
+.pagination strong,
+.pagination span {
   min-width: 38px;
   padding: 8px 10px;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: var(--surface);
   text-align: center;
+}
+
+.pagination span {
+  color: var(--muted);
 }
 
 .post-detail,
@@ -275,6 +280,12 @@ textarea {
 .form-stack label {
   display: grid;
   gap: 8px;
+  font-weight: 700;
+}
+
+.form-error {
+  margin: 12px 0 0;
+  color: var(--danger);
   font-weight: 700;
 }
 

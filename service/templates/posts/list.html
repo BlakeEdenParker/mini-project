@@ -16,8 +16,8 @@
   </section>
 
   <section class="toolbar">
-    <form class="search-form" method="get" action="{{ url_for('list_posts') }}">
-      <input type="search" name="q" placeholder="제목 또는 작성자 검색">
+    <form class="search-form" method="get" action="{{ url_for('list_posts_view') }}">
+      <input type="search" name="q" value="{{ query }}" placeholder="제목 또는 작성자 검색">
       <button type="submit">검색</button>
     </form>
   </section>
@@ -41,9 +41,27 @@
     {% endfor %}
   </section>
 
-  <nav class="pagination" aria-label="페이지">
-    <a href="#">이전</a>
-    <strong>1</strong>
-    <a href="#">다음</a>
-  </nav>
+  {% if pagination.total_pages > 1 %}
+    <nav class="pagination" aria-label="페이지">
+      {% if pagination.page > 1 %}
+        <a href="{{ url_for('list_posts_view', page=pagination.page - 1, q=query) }}">이전</a>
+      {% else %}
+        <span>이전</span>
+      {% endif %}
+
+      {% for page_number in range(1, pagination.total_pages + 1) %}
+        {% if page_number == pagination.page %}
+          <strong>{{ page_number }}</strong>
+        {% else %}
+          <a href="{{ url_for('list_posts_view', page=page_number, q=query) }}">{{ page_number }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if pagination.page < pagination.total_pages %}
+        <a href="{{ url_for('list_posts_view', page=pagination.page + 1, q=query) }}">다음</a>
+      {% else %}
+        <span>다음</span>
+      {% endif %}
+    </nav>
+  {% endif %}
 {% endblock %}

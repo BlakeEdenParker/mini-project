@@ -10,10 +10,11 @@
         <p class="eyebrow">{{ "Edit" if is_edit else "Create" }}</p>
         <h1>{{ "글 수정" if is_edit else "글쓰기" }}</h1>
       </div>
-      <a class="secondary-button" href="{{ url_for('detail_post', post_id=post.id) if is_edit else url_for('list_posts') }}">취소</a>
+      <a class="secondary-button" href="{{ url_for('detail_post', post_id=post.id) if is_edit else url_for('list_posts_view') }}">취소</a>
     </div>
 
     <form class="form-stack" method="post" action="{{ url_for('update_post', post_id=post.id) if is_edit else url_for('create_post') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <label>
         제목
         <input type="text" name="title" maxlength="120" value="{{ post.title if is_edit else '' }}" required>

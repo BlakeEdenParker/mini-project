@@ -95,7 +95,8 @@ rm -f /etc/nginx/sites-enabled/default
 
 log "Starting service and reloading nginx"
 systemctl daemon-reload
-systemctl enable --now "$(basename "${SYSTEMD_TARGET}")"
+systemctl enable "$(basename "${SYSTEMD_TARGET}")"
+systemctl restart "$(basename "${SYSTEMD_TARGET}")"
 nginx -t
 systemctl reload nginx
 
